@@ -1,0 +1,3 @@
+Exercicios sendo feitos no VSCode, compilados diretamente no terminal, sendo:
+g++ nome_arquivo.cpp -> compilar
+./a.out -> para rodar programa
