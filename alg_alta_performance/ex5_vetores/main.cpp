@@ -27,8 +27,11 @@ int main()
     cin >> nota2[i];
   }
 
-  while(1) {
+  int exit = 0;
+  while(exit >= 0) {
+    exit = 1;
     int opcao = 0;
+    int cod;
     for(int i=0; i<100; i++) {
       cout << "\n";
     }
@@ -42,7 +45,6 @@ int main()
     cin >> opcao;
 
     cout << "\n";
-    int codDigitado = 0;
     switch (opcao)
     {
       case 1:
@@ -53,23 +55,55 @@ int main()
         break;
       
       case 2:
+        cout << "Digite o codigo do aluno: ";
+        cin >> cod;
         for(int j=0; j<N; j++)
-        {
-          cout << codAlunos[j];
-          // if(codAlunos[i] == codDigitado)
-          // {
-          //   float media = (nota1[i] + nota2[i]) / 2.0;
-          //   cout << "A media deste aluno é: " << media;
-          // }
+        {          
+          if(codAlunos[j] == cod)
+          {
+            int iProva;
+            cout << "Qual a prova deseja ver a nota [1/2]: ";
+            cin >> iProva;
+
+            if(iProva == 1)
+              cout << "A nota é: " << nota1[j];
+            else if(iProva == 2)
+              cout << "A nota é: " << nota2[j];
+            else
+              cout << "Opção invalida";
+          }
+        }
+        break;
+
+      case 3:        
+        cout << "Digite o codigo do aluno: ";
+        cin >> cod;
+        for(int j=0; j<N; j++)
+        {          
+          if(codAlunos[j] == cod)
+          {
+            float media = (nota1[j] + nota2[j]) / 2.0;
+            cout << "A media deste aluno é: " << media;
+          }
+        }
+        break;
+
+      case 4:
+        for(int j=0; j<N; j++)
+        {          
+          float media = (nota1[j] + nota2[j]) / 2.0;
+          cout << "A media do aluno " << codAlunos[j] << " é: " << media << "\n";
         }
         break;
 
       default:
         break;
     }
-
-    int exit = 1;
-    cout << "\nDigite 0 para voltar ao menu.\n";
+    
+    cout << "\n\n";
+    cout << "\nDigite 0 para voltar ao menu\n";
+    cout << "Digite -1 para encerrar programa\n";
+    cout << "---> ";
     while(exit > 0) {
       cin >> exit;
     }
