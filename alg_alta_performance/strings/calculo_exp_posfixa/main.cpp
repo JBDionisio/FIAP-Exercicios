@@ -27,7 +27,7 @@ int main()
         }
         else {
             int operacao = (int)expressao[j];
-            cout << "Operacao: " << operacao << "\n";
+            cout << "Operacao: " << char(operacao) << "\n";
 
             topo--;
             float dado1 = pilha[topo];
