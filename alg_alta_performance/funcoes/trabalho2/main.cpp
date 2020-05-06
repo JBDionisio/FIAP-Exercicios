@@ -1,5 +1,7 @@
 // ALUNOS - 2ECR
 // João Batista Dionísio Neto - RM 83862
+// Frederico Costa do Nascimento Dezorzi - RM 82507
+// Luccas Guilherme Cordeiro - RM 83515
 
 #include <iostream>
 #include <cstring>
