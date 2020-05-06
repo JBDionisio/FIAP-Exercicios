@@ -6,13 +6,14 @@
 using namespace std;
 
 #define SIZE_NOME 30
+#define SIZE_ARRAYS 15
 
 struct registro_paciente
 {
     char nome[SIZE_NOME];
     char cpf[15];
     int anoNascimento;
-    char localInternacao[SIZE_NOME];
+    int localInternacao;
     char medicoResponsavel[SIZE_NOME];
     char status;
 };
@@ -20,7 +21,7 @@ struct registro_paciente
 struct registro_unidade_internacao
 {
     char nome[SIZE_NOME];
-    char telefone[9];
+    char telefone[10];
     int numeroLeitos;    
 };
 
@@ -49,25 +50,14 @@ int menu()
     cin >> opcao;
     return opcao;
 }
-tipoUnidadeInternacao cadastroUnidadeInternacao() {
-    tipoUnidadeInternacao unidade;
-    cout << endl;
-    cin.ignore();
-    cout << "Cadastrando nova unidade:" << endl;
-    cout << "Digite o nome: ";
-    cin.getline(unidade.nome, SIZE_NOME);
-    cout << "Digite o telefone (xxxx-xxxx): ";
-    cin.getline(unidade.telefone, 10);
-    cout << "Digite o número de leitos: ";
-    cin >> unidade.numeroLeitos;
-
-    return unidade;
-}
 
 int main()
 {
     int opcao = 0;
-    tipoUnidadeInternacao bufferUnidade;
+    int topoUnidades = 0;
+    tipoUnidadeInternacao unidades[SIZE_ARRAYS];
+
+    cout << "BEM VINDO!";
     do
     {
         limparTela();
@@ -75,13 +65,60 @@ int main()
         switch (opcao)
         {
             case 1:
-                bufferUnidade = cadastroUnidadeInternacao();
-                cout << bufferUnidade.nome;
-                while(1);
+            {
+                tipoUnidadeInternacao unidade;
+                cout << endl;
+                cin.ignore();
+                cout << "Cadastrando nova unidade:" << endl;
+                cout << "Digite o nome: ";
+                cin.getline(unidade.nome, SIZE_NOME);
+                cout << "Digite o telefone (xxxx-xxxx): ";
+                cin.getline(unidade.telefone, 10);
+                cout << "Digite o número de leitos: ";
+                cin >> unidade.numeroLeitos;
+
+                unidades[topoUnidades] = unidade;
+                topoUnidades++;
+
+                cout << "\nCadastro da unidade: '" << unidade.nome << "' feito com sucesso." << endl;
+                cout << "Digite qualquer tecla para voltar ao menu: ";
+                char buffer;
+                cin >> buffer;
                 break;
+            }
             case 2:
-                cout << "2";
+            {
+                tipoPaciente paciente;
+                cout << endl;
+                cin.ignore();
+                cout << "Cadastrando novo paciente:" << endl;
+                cout << "Digite o nome: ";
+                cin.getline(paciente.nome, SIZE_NOME);
+                cout << "Digite o CPF (xxx.xxx.xxx-xx): ";
+                cin.getline(paciente.cpf, 15);
+                cout << "Digite o ano de nascimento: ";
+                cin >> paciente.anoNascimento;
+                cout << "Digite o número conforme o local de internação" << endl;
+                for (int i=0; i<topoUnidades; i++)
+                {
+                    cout << i+1 << " - " << unidades[i].nome << endl;
+                }
+                cout << ">> ";
+                cin >> paciente.localInternacao;
+                cin.ignore();
+                cout << "Digite o nome do médico responsavel: ";
+                cin.getline(paciente.medicoResponsavel, SIZE_NOME);
+                
+
+                // unidades[topoUnidades] = unidade;
+                // topoUnidades++;
+
+                // cout << "\nCadastro da unidade: '" << unidade.nome << "' feito com sucesso." << endl;
+                cout << "Digite qualquer tecla para voltar ao menu: ";
+                char buffer;
+                cin >> buffer;
                 break;
+            }
             case 3:
                 cout << "3";
                 break;
@@ -89,10 +126,22 @@ int main()
                 cout << "4";
                 break;
             case 5:
-                cout << "goodbye";
+                break;
+            default:
+                cout << "Opção invalida";
                 break;
         }
     } while (opcao != 5);
+
+    cout << "\n*****UNIDADES*****";
+    for (int i=0; i<topoUnidades; i++)
+    {
+        cout << endl;
+        cout << "Nome: " << unidades[i].nome << endl;
+        cout << "Telefone: " << unidades[i].telefone << endl;
+        cout << "Numero de leitos: " << unidades[i].numeroLeitos << endl;
+    }
+    
     
     return 0;
 
