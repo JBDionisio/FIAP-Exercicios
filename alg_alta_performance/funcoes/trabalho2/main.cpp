@@ -89,6 +89,22 @@ char avaliacaoPaciente()
 
     return (soma >= 3) ? 'I' : 'L';
 }
+int acharPacientePorCPF(tipoPaciente pacientes[SIZE_ARRAYS], int topoPacientes) {
+    char cpf[15];
+    cout << endl;
+    cout << "Digite o CPF no formato xxx.xxx.xxx-xx para consultar: " << endl;
+    cout << ">> ";
+    cin.getline(cpf, 15);
+
+    int achado=-1;
+    for (int i=0; i<topoPacientes; i++)
+    {
+        if(strcmp(pacientes[i].cpf, cpf) == 0)
+            achado = i;
+    }
+
+    return achado;
+}
 
 int main()
 {
@@ -166,25 +182,10 @@ int main()
             }
             case 3:
             {
-                char cpf[15];
-                cout << endl;
-                cout << "Digite o CPF no formato xxx.xxx.xxx-xx para consultar: " << endl;
-                cout << ">> ";
-                cin.getline(cpf, 15);
-
-                tipoPaciente pacienteAchado;
-                int achado=0;
-                for (int i=0; i<topoPacientes; i++)
+                int indicePaciente = acharPacientePorCPF(pacientes, topoPacientes);
+                if(indicePaciente >= 0)
                 {
-                    if(strcmp(pacientes[i].cpf, cpf) == 0)
-                    {
-                        pacienteAchado = pacientes[i];
-                        achado++;
-                    }
-                }
-
-                if(achado > 0)
-                {
+                    tipoPaciente pacienteAchado = pacientes[indicePaciente];
                     cout << "\nInformações do paciente: " << endl;
                     cout << "Nome: " << pacienteAchado.nome << endl;
                     cout << "CPF: " << pacienteAchado.cpf << endl;
@@ -210,8 +211,34 @@ int main()
                 break;
             }
             case 4:
-                cout << "4";
+            {
+                cout << endl;
+                cout << "Alterar status do paciente:";
+                int indicePaciente = acharPacientePorCPF(pacientes, topoPacientes);
+                if(indicePaciente >= 0) 
+                {
+                    int statusAtual;
+                    cout << "Paciente '" << pacientes[indicePaciente].nome << "' encontrado" << endl;
+                    cout << "Digite o valor correspondente para o status atual do paciente:" << endl;
+                    cout << "1 - Alta e liberado para casa\n";
+                    cout << "2 - Óbito\n";
+                    cout << ">> ";
+                    cin >> statusAtual;
+                    pacientes[indicePaciente].status = (statusAtual == 1) ? 'A' : 'O';
+
+                    if(statusAtual == 1)
+                        cout << "Status alterado para 'ALTA'";
+                    else
+                        cout << "Status alterado para 'ÓBITO'";                    
+                }
+                else
+                    cout << "Paciente não encontrado";
+
+                cout << "\nDigite qualquer tecla para voltar ao menu: ";
+                char buffer;
+                cin >> buffer; 
                 break;
+            }
             case 5:
                 break;
             default:
