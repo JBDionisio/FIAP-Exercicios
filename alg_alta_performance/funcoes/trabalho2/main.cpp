@@ -3,6 +3,20 @@
 // Frederico Costa do Nascimento Dezorzi - RM 82507
 // Luccas Guilherme Cordeiro - RM 83515
 
+// Distribuição entre as unidades de atendimento
+    //  É feita verificando a unidade que tem mais leitos livres, fazendo a diferença entre
+    //o numero de leitos total com os leitos ja ocupados.
+    //  Feita na function alocarPacienteEmUnidade() a partir da linha 129.
+
+// Tomada de decisão entre INTERNAÇÃO ou LIBERAÇÃO
+    //  É feita com um sistema de "pesos", com base na resposta do paciente.
+    //  Se o "peso" das respostas for maior ou igual a 3, esse paciente deve ser internado pois
+    //correu um risco de contaminação alto ou apresenta os sintomas.
+    //  Leva-se em conta a idade também, sendo maior ou igual a 60 anos soma mais um ao peso.
+    //  Feita na function avaliacaoPaciente() a partir da linha 71.
+
+// No final do programa, apenas é printado todas as unidades e pacientes.
+
 #include <iostream>
 #include <cstring>
 #include <locale>
@@ -25,7 +39,8 @@ struct registro_unidade_internacao
 {
     char nome[SIZE_NOME];
     char telefone[10];
-    int numeroLeitos;    
+    int numeroLeitos;
+    int numeroLeitosOcupados; 
 };
 
 typedef struct registro_paciente tipoPaciente;
@@ -53,8 +68,9 @@ int menu()
     cin >> opcao;
     return opcao;
 }
-char avaliacaoPaciente()
+char avaliacaoPaciente(int idadePaciente)
 {
+
     int buffer = 0, soma = 0;
     cout << "Responda as perguntas com 0 p/ NÃO e 1 p/ SIM:" << endl;
     cout << "Você está com tosse?" << endl << ">> ";
@@ -87,6 +103,11 @@ char avaliacaoPaciente()
     (buffer == 1) ? soma+=3 : soma;
     buffer = 0;
 
+    cin.ignore();
+
+    if(idadePaciente >= 60)
+        soma+=1;
+
     return (soma >= 3) ? 'I' : 'L';
 }
 int acharPacientePorCPF(tipoPaciente pacientes[SIZE_ARRAYS], int topoPacientes) {
@@ -104,6 +125,25 @@ int acharPacientePorCPF(tipoPaciente pacientes[SIZE_ARRAYS], int topoPacientes) 
     }
 
     return achado;
+}
+int alocarPacienteEmUnidade(tipoUnidadeInternacao unidades[SIZE_ARRAYS], int topoUnidades) {
+
+    int indiceRetorno = -1;
+    int maiorQuantidadeDeLeitosLivres = 0;
+    for (int i=0; i<topoUnidades; i++)
+    {
+        bool condicaoBasica = unidades[i].numeroLeitosOcupados < unidades[i].numeroLeitos;
+        int leitosLivres = unidades[i].numeroLeitos - unidades[i].numeroLeitosOcupados;
+        if((maiorQuantidadeDeLeitosLivres == 0 && condicaoBasica) ||
+           (leitosLivres > maiorQuantidadeDeLeitosLivres && condicaoBasica))
+        {
+            maiorQuantidadeDeLeitosLivres = leitosLivres;
+            indiceRetorno = i;
+        }
+    }
+
+    unidades[indiceRetorno].numeroLeitosOcupados++;
+    return indiceRetorno;
 }
 
 int main()
@@ -132,6 +172,14 @@ int main()
                 cin.getline(unidade.telefone, 10);
                 cout << "Digite o número de leitos: ";
                 cin >> unidade.numeroLeitos;
+                cout << "Quantos leitos já estão ocupados? ";
+                cin >> unidade.numeroLeitosOcupados;
+
+                if(unidade.numeroLeitosOcupados > unidade.numeroLeitos)
+                {                    
+                    cout << "Não se pode ocupar mais leitos que existem nesta unidade.";
+                    break;
+                }
 
                 unidades[topoUnidades] = unidade;
                 topoUnidades++;
@@ -152,28 +200,35 @@ int main()
                 cout << "Digite o CPF (xxx.xxx.xxx-xx): ";
                 cin.getline(paciente.cpf, 15);
                 cout << "Digite o ano de nascimento: ";
-                cin >> paciente.anoNascimento;
-                cout << "Digite o número conforme o local de internação" << endl;
-
-                for (int i=0; i<topoUnidades; i++)
-                    cout << i+1 << " - " << unidades[i].nome << endl;
-                cout << ">> ";
-                cin >> paciente.localInternacao;
-                paciente.localInternacao-=1;
-                cin.ignore();
-                cout << "Digite o nome do médico responsavel: ";
-                cin.getline(paciente.medicoResponsavel, SIZE_NOME);
+                cin >> paciente.anoNascimento;                
+                
                 cout << "\nIniciando avaliação de sintomas do paciente:" << endl;
-                paciente.status = avaliacaoPaciente();
-
-                pacientes[topoPacientes] = paciente;
-                topoPacientes++;
+                paciente.status = avaliacaoPaciente(2020 - paciente.anoNascimento);                
 
                 cout << "\nCadastro do paciente: '" << paciente.nome << "' feito com sucesso." << endl;
                 if(paciente.status == 'L')
+                {
                     cout << "Paciente liberado para ir para casa.\n";
+                    paciente.localInternacao = -1;
+                }
                 else
+                {
                     cout << "Uma internação é necessaria.\n";
+                    paciente.localInternacao = alocarPacienteEmUnidade(unidades, topoUnidades);
+                    if(paciente.localInternacao >= 0) 
+                    {                        
+                        cout << "Paciente foi alocado em: " << unidades[paciente.localInternacao].nome << endl;
+                        cout << "Digite o nome do médico responsavel: ";
+                        cin.getline(paciente.medicoResponsavel, SIZE_NOME);
+                    }
+                    else 
+                    {
+                        cout << "Não foi possível alocar o paciente em nenhum local." << endl;
+                    }
+                }
+
+                pacientes[topoPacientes] = paciente;
+                topoPacientes++;
 
                 cout << "Digite qualquer tecla para voltar ao menu: ";
                 char buffer;
@@ -190,8 +245,14 @@ int main()
                     cout << "Nome: " << pacienteAchado.nome << endl;
                     cout << "CPF: " << pacienteAchado.cpf << endl;
                     cout << "Ano de nascimento: " << pacienteAchado.anoNascimento << endl;
-                    cout << "Local de internação: " << unidades[pacienteAchado.localInternacao].nome << endl;
-                    cout << "Médico responsavel: " << pacienteAchado.medicoResponsavel << endl;
+
+                    if(pacienteAchado.localInternacao >= 0) 
+                    {
+                        cout << "Local de internação: " << unidades[pacienteAchado.localInternacao].nome << endl;
+                        cout << "Médico responsavel: " << pacienteAchado.medicoResponsavel << endl;
+                    }
+                    else
+                        cout << "Paciente não esta alocado em nenhuma unidade." << endl;
 
                     if(pacienteAchado.status == 'L')
                         cout << "Status: liberado para ir para casa" << endl;
@@ -225,6 +286,7 @@ int main()
                     cout << ">> ";
                     cin >> statusAtual;
                     pacientes[indicePaciente].status = (statusAtual == 1) ? 'A' : 'O';
+                    pacientes[indicePaciente].localInternacao = -1;
 
                     if(statusAtual == 1)
                         cout << "Status alterado para 'ALTA'";
@@ -254,6 +316,7 @@ int main()
         cout << "Nome: " << unidades[i].nome << endl;
         cout << "Telefone: " << unidades[i].telefone << endl;
         cout << "Numero de leitos: " << unidades[i].numeroLeitos << endl;
+        cout << "Numero de leitos Ocupados: " << unidades[i].numeroLeitosOcupados << endl;
     }
 
     cout << "\n*****PACIENTES*****";
