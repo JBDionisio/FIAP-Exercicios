@@ -29,11 +29,11 @@ int mais_fria(TipoCidade cidades[], int numCidades)
     for(int i=0; i<numCidades; i++) 
     {
         if(temp>cidades[i].temperaturaMediaAnual)
+        {
             temp=cidades[i].temperaturaMediaAnual;
             indMenorTemperatura = i;
+        }            
     }
-
-    cout << "CIDADE: " << cidades[indMenorTemperatura].nome;
 
     return indMenorTemperatura;
 }
@@ -65,17 +65,22 @@ void busca_cidade(TipoCidade cidades[], int numCidades, char cidadeProcurada[TAM
         }
     }
     
-    cout << "Cidade encontrada\n";
-    cout << "Nome: " << cidades[pos].nome << endl;
-    cout << "Numero de habitantes: " << cidades[pos].numeroHabitantes << endl;
-    cout << "Temperatura média no ano de 2019: " << cidades[pos].temperaturaMediaAnual << endl;
+    if(pos!=-1) 
+    {
+        cout << "Cidade encontrada\n";
+        cout << "Nome: " << cidades[pos].nome << endl;
+        cout << "Numero de habitantes: " << cidades[pos].numeroHabitantes << endl;
+        cout << "Temperatura média no ano de 2019: " << cidades[pos].temperaturaMediaAnual << endl;
+    }
+    else
+        cout << "A cidade não foi encontrada.\n";
 }
 
 int main()
 {
     setlocale(LC_ALL, "");
     TipoCidade cidades[MAX_CIDADES]; 
-    int resp, nCidades=0, indMenor;
+    int resp, nCidades=0;
 
     do {
         system("cls");
@@ -109,7 +114,7 @@ int main()
             }
             case 2:
             {
-                indMenor = mais_fria(cidades, nCidades);
+                int indMenor = mais_fria(cidades, nCidades);
                 TipoRegMenorTemp cidadeMenorTemperatura;
                 strcpy(cidadeMenorTemperatura.nome, cidades[indMenor].nome);
                 cidadeMenorTemperatura.temperaturaMediaAnual = cidades[indMenor].temperaturaMediaAnual;
