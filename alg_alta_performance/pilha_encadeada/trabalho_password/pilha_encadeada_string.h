@@ -3,7 +3,7 @@
 using namespace std;
 
 struct noS {
-    char dado[];
+    char dado[20];
     struct noS *prox;
 };
 

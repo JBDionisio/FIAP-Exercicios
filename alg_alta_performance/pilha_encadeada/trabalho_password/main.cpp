@@ -5,17 +5,30 @@
 using namespace std;
 
 #include "pilha_encadeada_char.h"
+#include "pilha_encadeada_string.h"
 
 int main()
 {
-    TipoPilha topo;
+    
+}
+
+void codifica(char senha[])
+{
+    char caracterAtual;
+    for(int i=0; caracterAtual != '_' || caracterAtual != '#'; i++) 
+    {
+
+
+        if(caracterAtual == '\0')
+            break;
+    }
+}
+
+void inverter() 
+{
     char palavra[20], inversao[20];
-
+    PilhaChar topo;
     init(&topo);
-
-    cout << "Digite a palavra a ser verificada: " << endl ;
-    cin.getline(palavra, 20) ;
-
     int i;
     for(i=0; palavra[i] != '\0'; i++) 
     {

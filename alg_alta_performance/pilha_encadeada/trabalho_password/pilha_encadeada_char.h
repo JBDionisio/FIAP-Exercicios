@@ -2,22 +2,19 @@
 #include <stdlib.h>
 using namespace std;
 
-/* declaracao do no */
 struct no {
     char dado;
     struct no *prox;
 };
 
-/*Definição do tipo de dado pilha */
-typedef struct no * TipoPilha;
+typedef struct no * PilhaChar;
 
-
-void init (TipoPilha *topo)
+void init (PilhaChar *topo)
 {
 *topo = NULL;
 }
 
-int isEmpty (TipoPilha topo)
+int isEmpty (PilhaChar topo)
 {
 	if (topo == NULL)
 		return(1);
@@ -25,10 +22,10 @@ int isEmpty (TipoPilha topo)
 		return(0);
 }
 
-void push (TipoPilha *topo, char elem)
+void push (PilhaChar *topo, char elem)
 {
-	TipoPilha novo;
-	novo = (TipoPilha) malloc(sizeof(struct no));
+	PilhaChar novo;
+	novo = (PilhaChar) malloc(sizeof(struct no));
 	if (novo != NULL)
 	{
 		novo->dado=elem;
@@ -39,9 +36,9 @@ void push (TipoPilha *topo, char elem)
 		cout << "Stack overflow \n";
 }
 
-int pop(TipoPilha *topo,char *elem)
+int pop(PilhaChar *topo,char *elem)
 {
-	TipoPilha aux;
+	PilhaChar aux;
 	aux = *topo;
 	if (isEmpty(*topo)) 
 	{
@@ -57,7 +54,7 @@ int pop(TipoPilha *topo,char *elem)
 	}
 }
 
-int top (TipoPilha topo,char *elem)
+int top (PilhaChar topo,char *elem)
 {
 	if (isEmpty(topo))
 	{
