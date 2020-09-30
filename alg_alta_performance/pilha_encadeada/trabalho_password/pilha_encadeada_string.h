@@ -10,12 +10,12 @@ struct noS {
 typedef struct noS* PilhaString;
 
 
-void init(PilhaString *topo)
+void initS(PilhaString *topo)
 {
     *topo = NULL;
 }
 
-int isEmpty(PilhaString topo)
+int isEmptyS(PilhaString topo)
 {
 	if (topo == NULL)
 		return(1);
@@ -23,7 +23,7 @@ int isEmpty(PilhaString topo)
 		return(0);
 }
 
-void push(PilhaString *topo, char elem[])
+void pushS(PilhaString *topo, char elem[])
 {
 	PilhaString novo;
 	novo = (PilhaString) malloc(sizeof(struct noS));
@@ -37,13 +37,13 @@ void push(PilhaString *topo, char elem[])
 		cout << "Stack overflow \n";
 }
 
-int pop(PilhaString *topo,char *elem[])
+int popS(PilhaString *topo,char elem[])
 {
 	PilhaString aux;
 	aux = *topo;
-	if (isEmpty(*topo)) 
+	if (!isEmptyS(*topo)) 
 	{
-		strcpy(*elem, aux->dado);
+		strcpy(elem, aux->dado);
 		*topo=aux->prox;
 		free(aux);
 		return(1);
@@ -55,9 +55,9 @@ int pop(PilhaString *topo,char *elem[])
 	}
 }
 
-int top(PilhaString topo,char *elem[])
+int topS(PilhaString topo,char *elem[])
 {
-	if (isEmpty(topo))
+	if (!isEmptyS(topo))
 	{
         strcpy(*elem, topo->dado);
     	return(1);

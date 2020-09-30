@@ -40,7 +40,7 @@ int pop(PilhaChar *topo,char *elem)
 {
 	PilhaChar aux;
 	aux = *topo;
-	if (isEmpty(*topo)) 
+	if (!isEmpty(*topo)) 
 	{
 		*elem=aux->dado;
 		*topo=aux->prox;
@@ -56,7 +56,7 @@ int pop(PilhaChar *topo,char *elem)
 
 int top (PilhaChar topo,char *elem)
 {
-	if (isEmpty(topo))
+	if (!isEmpty(topo))
 	{
     	*elem=topo->dado;
     	return(1);
